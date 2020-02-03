@@ -5,7 +5,7 @@
 }
 
 body {
-    background: #94ECBE;
+    background: #ffffff;
     color: #4A7856;
     font-family: 'Poppins', sans-serif;;
 }
@@ -40,7 +40,7 @@ nav {
     width: 30%;
 }
 
-.nav-links li {
+.nav-links .navs {
     list-style: none;
 }
 
@@ -79,6 +79,10 @@ header {
     z-index: 40;
 }
 
+ul {
+    padding-left: 25px;
+}
+
 @media screen and (max-width: 1024px) {
     .nav-links {
         display: flex;
@@ -106,7 +110,7 @@ header {
         transition: transform 0.5s ease-in;
     }
 
-    .nav-links li {
+    .nav-links .navs {
         opacity: 0;
     }
 

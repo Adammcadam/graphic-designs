@@ -22,10 +22,10 @@
                 <h4 class="header-text"><a href="#">Graphic Designs</a></h4>
             </div>
             <ul class="nav-links">
-                <li><a href="{% url 'graphic_designs-home' %}">Home</a></li>
-                <li><a href="{% url 'graphic_designs-about' %}">About</a></li>
-                <li><a href="#">Login</a></li>
-                <li><a href="#">Register</a></li>
+                <li class="navs"><a href="{% url 'graphic_designs-home' %}">Home</a></li>
+                <li class="navs"><a href="{% url 'graphic_designs-about' %}">About</a></li>
+                <li class="navs"><a href="#">Login</a></li>
+                <li class="navs"><a href="#">Register</a></li>
             </ul>
             <div class="burger">
                 <div class="line1"></div>
@@ -36,6 +36,13 @@
     </div>
     <div class="container main-content">
         <div class="row">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
             {% block body %}{% endblock %}
         </div>
     </div>

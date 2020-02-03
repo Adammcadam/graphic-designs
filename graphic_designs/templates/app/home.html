@@ -4,7 +4,7 @@
     <div class="col-md-12">
         {% for post in posts %}
             <h1>{{ post.title }}</h1>
-            <p><small>By {{ post.author }} on {{ post.date_posted }}</small></p>
+            <p><small>By {{ post.author }} on {{ post.date_posted|date:"d F, Y" }}</small></p>
             <p>{{ post.content }}</p>
         {% endfor %}
     </div>
