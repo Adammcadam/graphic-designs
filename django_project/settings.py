@@ -125,3 +125,4 @@ STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'graphic_designs-home'
+LOGIN_URL = 'login'
