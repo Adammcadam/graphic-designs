@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, UserUpdateForm, AccountUpdateForm
 
 def register(request):
     if request.method == 'POST':
@@ -16,4 +16,19 @@ def register(request):
     
 @login_required
 def account(request):
-    return render(request, 'users/account.html')
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        account_form = AccountUpdateForm(request.POST, request.FILES, instance=request.user.account)
+        if user_form.is_valid() and account_form.is_valid():
+            user_form.save()
+            account_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect('account')
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        account_form = AccountUpdateForm(instance=request.user.account)
+    context = {
+        'user_form': user_form,
+        'account_form': account_form
+    }
+    return render(request, 'users/account.html', context)
