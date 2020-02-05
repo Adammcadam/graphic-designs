@@ -83,6 +83,12 @@ ul {
     padding-left: 25px;
 }
 
+.account-img {
+    width: 225px;
+    height: 225px;
+    margin-right: 10px;
+}
+
 @media screen and (max-width: 1024px) {
     .nav-links {
         display: flex;
