@@ -2,6 +2,12 @@
 
 {% block body %}
     <div class="col-md-12">
-        <p>{{ user.username }}</p>
+        <div class="media">
+            <img src="{{ user.account.image.url }}" alt="Account" class="rounded-circle account-img">
+            <div class="media-body">
+                <h2 class="account-heading">{{ user.username }}</h2>
+                <p class="text-secondary">{{ user.email }}</p>
+            </div>
+        </div>
     </div>
 {% endblock %}
