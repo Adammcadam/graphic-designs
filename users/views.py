@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, AccountUpdateForm
+from .models import Item
 
 def register(request):
     if request.method == 'POST':
@@ -32,3 +33,9 @@ def account(request):
         'account_form': account_form
     }
     return render(request, 'users/account.html', context)
+
+def products(request):
+    context = {
+        'products': Item.objects.all()
+    }
+    return render(request, 'users/products.html', context) 
