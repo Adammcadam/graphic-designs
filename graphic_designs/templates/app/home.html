@@ -1,11 +1,49 @@
 {% extends 'app/base.html' %}
 
+{% block slider %}
+<!-- product slider -->
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img class="carousel-img" src="/media/images/carousel/product.png" alt="{{ product.title }}">
+            <div class="carousel-caption d-none d-md-block">
+                <p class="carousel-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. </p>
+            </div>
+        </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+<div class="action-bar">
+    <h1>Check out our great products <i class="fa fa-arrow-down" aria-hidden="true"></i></h1>
+</div>
+{% endblock %}
+
 {% block body %}
+    <!-- product cards  -->
     <div class="col-md-12">
-        {% for post in posts %}
-            <h1>{{ post.title }}</h1>
-            <p><small>By {{ post.author }} on {{ post.date_posted|date:"d F, Y" }}</small></p>
-            <p>{{ post.content }}</p>
+        <div class="row">
+        {% for product in products %}
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary">Buy Now <i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+                </div>
+            </div>
         {% endfor %}
+        </div>
     </div>
 {% endblock %}

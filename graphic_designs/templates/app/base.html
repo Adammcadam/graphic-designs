@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- font awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <!-- Bootstrap css -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <!-- CSS -->
@@ -23,14 +25,16 @@
             </div>
             <ul class="nav-links">
                 <li class="navs"><a href="{% url 'graphic_designs-home' %}">Home</a></li>
-                <li class="navs"><a href="{% url 'graphic_designs-about' %}">About</a></li>
+                <li class="navs"><a href="{% url 'products' %}">Products</a></li>
                 {% if user.is_authenticated %}
                     <li class="navs"><a href="{% url 'account' %}">Account</a></li>
                     <li class="navs"><a href="{% url 'logout' %}">Logout</a></li>
+                    <li class="navs"><a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Cart </a></li>
                 {% else %}
                     <li class="navs"><a href="{% url 'login' %}">Login</a></li>
                     <li class="navs"><a href="{% url 'register' %}">Register</a></li>
                 {% endif %}
+                
             </ul>
             <div class="burger">
                 <div class="line1"></div>
@@ -38,6 +42,9 @@
                 <div class="line3"></div>
             </div>
         </nav>
+    </div>
+    <div class="slider">
+        {% block slider %}{% endblock %}
     </div>
     <div class="container main-content">
         <div class="row">
@@ -51,6 +58,7 @@
             {% block body %}{% endblock %}
         </div>
     </div>
+    <!-- footer needed   -->
     <script src="{% static 'js/nav.js' %}"></script>
     <!-- Bootstrap js  -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

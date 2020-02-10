@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from .models import Post, Testimonial
+from users.models import Item
 
 def home(request):
     context = {
-        'posts': Post.objects.all()
+        'products': Item.objects.all()
     }
     return render(request, 'app/home.html', context)
 
