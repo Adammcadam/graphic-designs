@@ -1,12 +1,12 @@
 from django.shortcuts import render
+from django.views.generic import ListView, DetailView
 from .models import Post, Testimonial
 from users.models import Item
 
-def home(request):
-    context = {
-        'products': Item.objects.all()
-    }
-    return render(request, 'app/home.html', context)
+class HomeView(ListView):
+    model = Item
+    template_name = "app/home.html"
 
-def about(request):
-    return render(request, 'app/about.html', {'title': 'About'})
+class ProductDetailView(DetailView):
+    model = Item
+    template_name = "app/product.html"

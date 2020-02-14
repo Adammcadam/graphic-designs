@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.shortcuts import reverse
 from PIL import Image
 
 SIZE_CHOICES = (
@@ -32,6 +33,7 @@ class Item(models.Model):
     price = models.FloatField()
     size = models.CharField(choices=SIZE_CHOICES, default='S', max_length=2)
     image = models.ImageField(default='default.jpg', upload_to='product_pics')
+    slug = models.SlugField()
 
     def __str__(self):
         return self.title
@@ -45,6 +47,11 @@ class Item(models.Model):
             output_size = (200, 200)
             img.thumbnail(output_size)
             img.save(self.image.path)
+    
+    def  get_absolute_url(self):
+        return reverse('core:graphic_designs-product', kwargs={
+            'slug': self.slug
+        })
 
 class OrderItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, AccountUpdateForm
 from .models import Item
@@ -34,8 +35,12 @@ def account(request):
     }
     return render(request, 'users/account.html', context)
 
-def products(request):
-    context = {
-        'products': Item.objects.all()
-    }
-    return render(request, 'users/products.html', context) 
+def ProductsView(ListView):
+    model = Item
+    template_name = "product.html"
+
+# def product(request):
+#     context = {
+#         'products': Item.objects.all()
+#     }
+#     return render(request, 'users/product.html', context) 
