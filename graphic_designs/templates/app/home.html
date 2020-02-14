@@ -36,10 +36,13 @@
         <div class="row">
         {% for product in object_list %}
             <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.title }}">
+                <a href="{{ product.get_absolute_url }}">
+                    <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.title }}">
+                </a>
                 <div class="card-body">
                     <h5 class="card-title">{{ product.title }}</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <strong class="mr-3">Price: {% if product.discount_price %}£{{ product.discount_price }}{% else %}£{{ product.price }}{% endif %}</strong>
                     <a href="{{ product.get_absolute_url }}" class="btn btn-primary">More Info <i class="fa fa-search" aria-hidden="true"></i></a>
                 </div>
             </div>

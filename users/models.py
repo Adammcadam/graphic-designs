@@ -31,9 +31,11 @@ class Account(models.Model):
 class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.FloatField()
+    discount_price = models.FloatField(blank=True, null=True)
     size = models.CharField(choices=SIZE_CHOICES, default='S', max_length=2)
     image = models.ImageField(default='default.jpg', upload_to='product_pics')
     slug = models.SlugField()
+    description = models.TextField(default='This is a test description, please update')
 
     def __str__(self):
         return self.title
@@ -49,12 +51,23 @@ class Item(models.Model):
             img.save(self.image.path)
     
     def  get_absolute_url(self):
-        return reverse('core:graphic_designs-product', kwargs={
+        return reverse('core:product', kwargs={
+            'slug': self.slug
+        })
+
+    def get_add_to_cart(self):
+        return reverse('core:add-to-cart', kwargs={
             'slug': self.slug
         })
 
 class OrderItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} of {self.item.title}"
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
