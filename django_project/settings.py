@@ -127,5 +127,5 @@ MEDIA_URL = '/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = 'graphic_designs-home'
+LOGIN_REDIRECT_URL = 'core:home'
 LOGIN_URL = 'login'
