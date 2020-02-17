@@ -29,7 +29,7 @@
                 {% if user.is_authenticated %}
                     <li class="navs"><a href="{% url 'account' %}">Account</a></li>
                     <li class="navs"><a href="{% url 'logout' %}">Logout</a></li>
-                    <li class="navs"><a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span>{{ request.user|cart_item_count }}</span> Cart</a></li>
+                    <li class="navs"><a href="{% url 'core:order-summary' %}"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span>{{ request.user|cart_item_count }}</span> Cart</a></li>
                 {% else %}
                     <li class="navs"><a href="{% url 'login' %}">Login</a></li>
                     <li class="navs"><a href="{% url 'register' %}">Register</a></li>
