@@ -55,8 +55,13 @@ class Item(models.Model):
             'slug': self.slug
         })
 
-    def get_add_to_cart(self):
+    def get_add_to_cart_url(self):
         return reverse('core:add-to-cart', kwargs={
+            'slug': self.slug
+        })
+    
+    def get_remove_from_cart_url(self):
+        return reverse('core:remove-from-cart', kwargs={
             'slug': self.slug
         })
 
@@ -77,5 +82,5 @@ class Order(models.Model):
     ordered = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title
+        return self.user.username
 
