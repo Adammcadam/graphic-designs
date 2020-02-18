@@ -45,17 +45,17 @@
         </nav>
     </div>
     <div class="slider">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} mt-5 pt-3">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
         {% block slider %}{% endblock %}
     </div>
     <div class="container main-content">
         <div class="row">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
             {% block body %}{% endblock %}
         </div>
     </div>

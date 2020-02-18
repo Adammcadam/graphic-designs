@@ -151,17 +151,24 @@ class CheckoutView(View):
                 order.billing_address = billing_address
                 order.save()
                 
-                return redirect('core:checkout')
-            messages.warning(self.request, "Checkout failed please check form for errors")
-            return redirect('core:checkout')
+                if payment_option == 'S':
+                    return redirect('core:payment', payment_option='stripe')
+                elif payment_option == 'O':
+                    return redirect('core:payment', payment_option='other')
+                else:
+                    messages.warning(self.request, "Invalid payment option")
+                    return redirect('core:checkout')
         except ObjectDoesNotExist:
             messages.error(self.request, "You do not have an active order")
             return redirect("core:order-summary")
 
 class PaymentView(View):
     def get(self, *args, **kwargs):
-        # order 
-        return render(self.request, "app/payment.html")
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        context = {
+            'order':order
+        }
+        return render(self.request, "app/payment.html", context)
 
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
@@ -179,7 +186,7 @@ class PaymentView(View):
             payment = Payment()
             payment.stripe_charge_id = charge['id']
             payment.user = self.request.user
-            payment.amount = amount
+            payment.amount = order.get_total()
             payment.save()
 
             # assign the payment to the order 
@@ -194,33 +201,33 @@ class PaymentView(View):
         except stripe.error.CardError as e:
             body = e.json_body
             error = body.get('error',{})
-            messages.error(self.request, f"{error.get('message')}")
+            messages.warning(self.request, f"{error.get('message')}")
             return redirect('core:home')
         except stripe.error.RateLimitError as e:
             # Too many requests made to the API too quickly
-            messages.error(self.request, "Too many requests")
+            messages.warning(self.request, "Too many requests")
             return redirect('core:home')
         except stripe.error.InvalidRequestError as e:
             # Invalid parameters were supplied to Stripe's API
-            messages.error(self.request, "Invalid parameters")
+            messages.warning(self.request, "Invalid parameters")
             return redirect('core:home')
         except stripe.error.AuthenticationError as e:
             # Authentication with Stripe's API failed
             # (maybe you changed API keys recently)
-            messages.error(self.request, "Not authenticated")
+            messages.warning(self.request, "Not authenticated")
             return redirect('core:home')
         except stripe.error.APIConnectionError as e:
             # Network communication with Stripe failed
-            messages.error(self.request, "Unable to connect to stripe")
+            messages.warning(self.request, "Unable to connect to stripe")
             return redirect('core:home')
         except stripe.error.StripeError as e:
             # Display a very generic error to the user, and maybe send
             # yourself an email
-            messages.error(self.request, "Something went wrong, you have not been charged. Please try again")
+            messages.warning(self.request, "Something went wrong, you have not been charged. Please try again")
             return redirect('core:home')
         except Exception as e:
             # send email to self 
-            messages.error(self.request, "Serious error has occured we have been notified")
+            messages.warning(self.request, "Serious error has occured we have been notified")
             return redirect('core:home')
 
         

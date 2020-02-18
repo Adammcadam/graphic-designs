@@ -9,6 +9,7 @@
     <h1>Make Payment</h1>
     
     <form action="." method="post" id="stripe-form">
+        {% csrf_token %}
         <div class="stripe-form-row">
             <label for="card-element">
             Credit or debit card
@@ -26,8 +27,11 @@
 </div>
 <!-- TODO style this area below -->
 <div class="col-md-4">
-    <p>product name</p><strong>£5.99</strong>
-    <p>total</p><strong>£5.99</strong>
+    <legend class="border-bottom mb-2">Order Summary</legend>
+    {% for order_item in order.items.all %}
+        <p>{{order_item.quantity }} x {{ order_item.item.title }}: <strong>£{{ order_item.get_final_price }}</strong></p>
+    {% endfor %}
+    <p>Total: <strong>£{{ order.get_total }}</strong></p>
 </div>
 <!-- stripe  -->
 <script src="https://js.stripe.com/v3/"></script>
