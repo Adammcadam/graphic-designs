@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
 from .models import Post, Testimonial
+from .forms import CheckoutForm
 from users.models import Item, OrderItem, Order
 
 class HomeView(ListView):
@@ -113,3 +114,18 @@ def remove_single_item_from_cart(request, slug):
         messages.info(request, "You do not have an active order")
         return redirect("core:product", slug=slug)
     return redirect("core:product", slug=slug)
+
+class CheckoutView(View):
+    def get(self, *args, **kwargs):
+        # form 
+        form = CheckoutForm()
+        context = {
+            'form': form
+        }
+        return render(self.request, "app/checkout_form.html", context)
+
+    def post(self, *args, **kwargs):
+        form = CheckoutForm(self.request.POST or None)
+        if form.is_valid():
+            print('form is valid!')
+            return redirect('core:checkout')
