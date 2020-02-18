@@ -99,8 +99,11 @@ def remove_single_item_from_cart(request, slug):
                 user=request.user,
                 ordered=False
             )[0]
-            order_item.quantity -= 1
-            order_item.save()
+            if order_item.quantity > 1:
+                order_item.quantity -= 1
+                order_item.save()
+            else: 
+                order.items.remove(order_item)
             messages.success(request, "This item quantity has been updated")
             return redirect("core:order-summary")
         else: 
