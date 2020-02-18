@@ -11,6 +11,5 @@ class CheckoutForm(forms.Form):
     city = forms.CharField()
     country = CountryField(blank_label="Select Country").formfield()
     postcode = forms.CharField()
-    same_billing_address = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
-    save_info = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    same_shipping_address = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     payment_option = forms.ChoiceField(widget=forms.RadioSelect(), choices=PAYMENT_CHOICES)

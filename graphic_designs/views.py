@@ -7,7 +7,7 @@ from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
 from .models import Post, Testimonial
 from .forms import CheckoutForm
-from users.models import Item, OrderItem, Order
+from users.models import Item, OrderItem, Order, BillingAddress
 
 class HomeView(ListView):
     model = Item
@@ -126,7 +126,30 @@ class CheckoutView(View):
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
-        if form.is_valid():
+        try:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            if form.is_valid():
+                street_address = form.cleaned_data.get('street_address')
+                city = form.cleaned_data.get('city')
+                country = form.cleaned_data.get('country')
+                postcode = form.cleaned_data.get('postcode')
+                # TODO: add functionality for these fields 
+                # same_shipping_address = form.cleaned_data.get('same_shipping_address')
+                payment_option = form.cleaned_data.get('payment_option')
+                billing_address = BillingAddress(
+                    user=self.request.user,
+                    street_address=street_address,
+                    city=city,
+                    postcode=postcode,
+                    country=country,
+                )
+                billing_address.save()
+                order.billing_address = billing_address
+                order.save()
+                return redirect('core:checkout')
+            messages.warning(self.request, "Checkout failed please check form for errors")
             return redirect('core:checkout')
-        messages.warning(self.request, "Checkout failed please check form for errors")
-        return redirect('core:checkout')
+        except ObjectDoesNotExist:
+            messages.error(self.request, "You do not have an active order")
+            return redirect("core:order-summary")
+        
