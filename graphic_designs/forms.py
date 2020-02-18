@@ -3,15 +3,14 @@ from django_countries.fields import CountryField
 
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),
-    ('P', 'Paypal'),
     ('O', 'Other')
 )
 
 class CheckoutForm(forms.Form):
     street_address = forms.CharField()
     city = forms.CharField()
-    country = CountryField(blank_label="Select Country")
+    country = CountryField(blank_label="Select Country").formfield()
     postcode = forms.CharField()
-    same_billing_address = forms.BooleanField(widget=forms.CheckboxInput())
-    save_info = forms.BooleanField(widget=forms.CheckboxInput())
+    same_billing_address = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    save_info = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     payment_option = forms.ChoiceField(widget=forms.RadioSelect(), choices=PAYMENT_CHOICES)

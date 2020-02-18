@@ -4,6 +4,7 @@
 {% block body %}
         <div class="col-md-12">
             <form class="mt-1 mr-5 pl-5" action="" method="POST">
+                {% csrf_token %}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4"><h1>Checkout Form</h1></legend>
                     {{ form|crispy }}

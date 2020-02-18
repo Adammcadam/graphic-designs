@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.shortcuts import reverse
 from PIL import Image
+from django_countries.fields import CountryField
 
 SIZE_CHOICES = (
     ('NA', 'N/A'), # for custom sizing
@@ -104,4 +105,13 @@ class Order(models.Model):
             total += order_item.get_final_price()
         return total
 
+class BillingAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    street_address = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    country = CountryField(multiple=False)
+    postcode = models.CharField(max_length=7)
+
+    def __str__(self):
+        return self.user.username
 
