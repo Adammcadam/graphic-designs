@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, View
@@ -8,6 +9,10 @@ from django.utils import timezone
 from .models import Post, Testimonial
 from .forms import CheckoutForm
 from users.models import Item, OrderItem, Order, BillingAddress
+
+import stripe
+
+stripe.api_key = settings.STRIPE_TEST_KEY
 
 class HomeView(ListView):
     model = Item
@@ -117,7 +122,6 @@ def remove_single_item_from_cart(request, slug):
 
 class CheckoutView(View):
     def get(self, *args, **kwargs):
-        # form 
         form = CheckoutForm()
         context = {
             'form': form
@@ -146,10 +150,27 @@ class CheckoutView(View):
                 billing_address.save()
                 order.billing_address = billing_address
                 order.save()
+                
                 return redirect('core:checkout')
             messages.warning(self.request, "Checkout failed please check form for errors")
             return redirect('core:checkout')
         except ObjectDoesNotExist:
             messages.error(self.request, "You do not have an active order")
             return redirect("core:order-summary")
+
+class PaymentView(View):
+    def get(self, *args, **kwargs):
+        # order 
+        return render(self.request, "app/payment.html")
+
+    def post(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        token = self.request.POST.get('stripeToken')
+        stripe.Charge.create(
+            amount=order.get_total() * 100, # to account for it being in pence
+            currency="gbp",
+            source=token
+        )
+
+        order.ordered = True
         

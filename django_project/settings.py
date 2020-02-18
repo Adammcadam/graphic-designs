@@ -130,3 +130,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'core:home'
 LOGIN_URL = 'login'
+
+STRIPE_TEST_KEY = ''
