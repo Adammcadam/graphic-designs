@@ -1,8 +1,20 @@
 {% extends 'app/base.html' %}
 
 {% block body %}
+    <div class="col-md-4">
+        <h1>{{ item.title }}</h1>
+        <img class="mt-5" src="{{ item.image.url }}" alt="">
+    </div>
+    <div class="col-md-8 mb">
+        <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto,
+            impedit officiis facere sed blanditiis fugit odio repellat facilis ullam
+            unde beatae dolor accusamus modi laborum distinctio hic. Odio, unde labore.
+        </p>
+        <a class="btn btn-primary mb-5" href="{{ object.get_add_to_cart_url }}">Add to cart</a>
+        <h2>Customer Reviews</h2>
+        <p>This is where reviews will go...</p>
+    </div>
     <!-- this needs some stuff on it -->
-    <a href="{{ object.get_add_to_cart_url }}">Add to cart</a>
-
-    <a href="{{ object.get_remove_from_cart_url }}">Remove from cart</a>
+    
 {% endblock %}

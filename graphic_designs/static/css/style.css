@@ -7,13 +7,33 @@
 body {
     background: #ffffff;
     color: #216869;
-    font-family: 'Poppins', sans-serif;;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 100px;
+}
+
+.footer {
+    background-color: #1F2421;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    text-align: right;
+}
+
+.footer span {
+    color: #49A078 !important;
 }
 
 .slider {
     width: 100%;
     margin: 0;
     padding: 0;
+}
+
+.slider-image {
+    width: 100%;
+    height: 637px;
 }
 
 .site-header {
@@ -81,7 +101,6 @@ header {
 }
 
 .main-content {
-    margin-top: 100px;
     z-index: 40;
 }
 
