@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
-from .models import Post, Testimonial
-from .forms import CheckoutForm
+from .models import Review
+from .forms import CheckoutForm, ReviewForm
 from users.models import Item, OrderItem, Order, BillingAddress, Payment
 
 import stripe
@@ -32,9 +32,16 @@ class OrderSummaryView(LoginRequiredMixin, View):
             return redirect("core:home")
         return render(self.request, "app/order_summary.html")
 
-class ProductDetailView(DetailView):
-    model = Item
-    template_name = "app/product.html"
+def product(request, slug):
+    item = get_object_or_404(Item, slug=slug)
+    review = Review.objects.all()
+    form = ReviewForm()
+    context = {
+        'form': form,
+        'item': item,
+        'review': review
+    }
+    return render(request, "app/product.html", context)
 
 @login_required
 def add_to_cart(request, slug):
