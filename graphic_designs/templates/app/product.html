@@ -64,3 +64,16 @@
     <!-- this needs some stuff on it -->
     
 {% endblock %}
+
+{% block javascripts %}
+<script>
+    var app = new Vue({
+        el: '#app',
+        // change the default delimiters so it doesn't interfere with jinja 
+        delimiters: ['$[', ']'],
+        data: {
+          message: 'Hello Vue!'
+        }
+      })
+</script>
+{% endblock %}
