@@ -58,7 +58,7 @@
         <h1>Our Products & Services</h1>
         <div class="row">
         {% for product in object_list %}
-            <div class="card mt-5 mr-3" style="width: 18rem;">
+            <div class="card mt-5 mr-5" style="width: 18rem;">
                 <a href="{{ product.get_absolute_url }}">
                     <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.title }}">
                 </a>

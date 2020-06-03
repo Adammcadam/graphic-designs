@@ -16,7 +16,7 @@ stripe.api_key = settings.STRIPE_TEST_KEY
 
 class HomeView(ListView):
     model = Item
-    paginate_by = 3
+    paginate_by = 12
     template_name = "app/home.html"
 
 class OrderSummaryView(LoginRequiredMixin, View):
