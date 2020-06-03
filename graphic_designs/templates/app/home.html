@@ -55,6 +55,7 @@
 {% block body %}
     <!-- product cards  -->
     <div class="col-md-12">
+        <br>
         <h1>Our Products & Services</h1>
         <div class="row">
         {% for product in object_list %}
@@ -78,7 +79,7 @@
             <ul class="pagination">
                 {% if is_paginated %}
                     {% if page_obj.has_previous %}
-                        <li class="page-item">
+                        <li class="page-item" id="prev">
                             <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous </a>
                         </li>
                     {% endif %}
@@ -86,7 +87,7 @@
                             <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
                         </li>
                     {% if page_obj.has_next %}
-                        <li class="page-item">
+                        <li class="page-item" id="next">
                             <a class="page-link" href="?page={{ page_obj.next_page_number }}"> Next</a>
                         </li>
                     {% endif %}
@@ -94,4 +95,12 @@
             </ul>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    if (window.location.href.indexOf("?page") != -1) {
+        $("#carousel-example-2").hide();
+    }
+</script>
 {% endblock %}
