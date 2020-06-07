@@ -13,6 +13,7 @@ from users.models import Item, OrderItem, Order, BillingAddress, Payment
 import stripe
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+stripe.max_network_retries = 2
 
 class HomeView(ListView):
     model = Item
@@ -91,10 +92,10 @@ def remove_from_cart(request, slug):
             messages.success(request, "This item has been removed from your cart")
             return redirect("core:order-summary")
         else: 
-            messages.info(request, "This item was not in your cart")
+            messages.error(request, "This item was not in your cart")
             return redirect("core:product", slug=slug)
     else: 
-        messages.info(request, "You do not have an active order")
+        messages.error(request, "You do not have an active order")
         return redirect("core:product", slug=slug)
     return redirect("core:product", slug=slug)
 
@@ -123,7 +124,7 @@ def remove_single_item_from_cart(request, slug):
             messages.info(request, "This item was not in your cart")
             return redirect("core:order-summary", slug=slug)
     else: 
-        messages.info(request, "You do not have an active order")
+        messages.error(request, "You do not have an active order")
         return redirect("core:product", slug=slug)
     return redirect("core:product", slug=slug)
 
@@ -182,13 +183,12 @@ class PaymentView(View):
         order = Order.objects.get(user=self.request.user, ordered=False)
         # get the token from stripe 
         token = self.request.POST.get('stripeToken')
-        # remove decimal causing error with stripe payment 
-        amount = str(order.get_total() * 100).split('.')[0] # to account for it in pence
+        # cast as an int to avoid float errors
+        amount = int(order.get_total() * 100) # to account for it in pence
         # make the payment intent to stripe 
         charge = stripe.PaymentIntent.create(
             amount=amount,
             currency='gbp',
-            source=token
         )
         # confirm its been ordered
         order.ordered = True 
@@ -196,29 +196,17 @@ class PaymentView(View):
         payment = Payment()
         payment.stripe_charge_id = charge['id']
         payment.user = self.request.user
-        payment.amount = amount
+        payment.amount = order.get_total()
         payment.save()
         # assign the payment
         order.payment = payment
         order.save()
-
-
-
-        # TODO: Success page/error page. Send email confirmation etc
-
+        
+        messages.success(self.request, "Your order was successful!")
         return redirect("core:order-confirmation")
 
 class OrderConfirmationView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
-        try:
-            order = Order.objects.get(user=self.request.user, ordered=False)
-            context = {
-                'object':order
-            }
-            return render(self.request, "app/order_confirmation.html", context)
-        except ObjectDoesNotExist:
-            messages.error(self.request, "You do not have an active order")
-            return redirect("core:home")
         return render(self.request, "app/order_confirmation.html")
 
         

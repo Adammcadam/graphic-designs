@@ -142,8 +142,12 @@ ul {
     color: #1F2421;
 }
 
+.alert {
+    margin-bottom: 0px!important;
+}
+
 .alert-margin {
-    margin-top: 4rem!important;
+    margin-top: 55px!important;
 }
 
 @media screen and (max-width: 1024px) {
