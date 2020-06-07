@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
-        <div class="col-md-12 mt-5">
+        <div class="col-md-8 mt-5">
             <form class="mt-1 mr-5 pl-5" action="" method="POST">
                 {% csrf_token %}
                 <fieldset class="form-group">
@@ -11,5 +11,12 @@
                 </fieldset>
                 <button class="btn btn-primary btn-lg btn-block mb-5" type="submit">Continue to Checkout</button>
             </form>
+        </div>
+        <div class="col-md-4 mt-5">
+            <legend class="border-bottom mb-2">Order Summary</legend>
+            {% for order_item in order.items.all %}
+                <p>{{order_item.quantity }} x {{ order_item.item.title }}: <strong>£{{ order_item.get_final_price }}</strong></p>
+            {% endfor %}
+            <p>Total: <strong>£{{ order.get_total }}</strong></p>
         </div>
 {% endblock %}

@@ -131,5 +131,9 @@ class Payment(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+class Discount(models.Model):
+    code = models.CharField(max_length=10)
 
-
+    def __str__(self):
+        return self.code

@@ -130,9 +130,11 @@ def remove_single_item_from_cart(request, slug):
 
 class CheckoutView(View):
     def get(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
         form = CheckoutForm()
         context = {
-            'form': form
+            'form': form,
+            'order' : order
         }
         return render(self.request, "app/checkout_form.html", context)
 
