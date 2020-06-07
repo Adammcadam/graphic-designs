@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_countries',
+    'stripe',
 ]
 
 MIDDLEWARE = [
@@ -121,6 +122,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -131,4 +133,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'core:home'
 LOGIN_URL = 'login'
 
-STRIPE_TEST_KEY = 'pk_test_TYooMQauvdEDq54NiTphI7jx'
+# stripe settings
+if DEBUG:
+    # test keys 
+    STRIPE_PUBLISHABLE_KEY = 'pk_test_51GrP31CknKlaY20INbzItLd2sD45cPrfYbpoFfsz9ixssEErWeLmF1e85y3iXyhBSZlcyQwPdMSpupGxgOUrhsGB00vwaskfno'
+    STRIPE_SECRET_KEY = 'sk_test_51GrP31CknKlaY20I3FfsKeY5nvKoo9xbuX3U8iSndMNnaGiS7di7FKU2Blli3UMiWYNOBsoHXoZIi8W7GKWiRdMO00rPPMOcEG'
+else:
+    # live keys 
+    STRIPE_PUBLISHABLE_KEY = ''
+    STRIPE_SECRET_KEY = ''

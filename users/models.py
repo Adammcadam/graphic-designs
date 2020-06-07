@@ -88,6 +88,11 @@ class OrderItem(models.Model):
         if self.item.discount_price:
             return self.get_total_discount_price()
         return self.get_total_price()
+    
+    def  get_absolute_url(self):
+        return reverse('core:product', kwargs={
+            'slug': self.item.slug
+        })
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -122,6 +127,7 @@ class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     amount = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    order_number = models.IntegerField(default=1)
 
     def __str__(self):
         return self.user.username

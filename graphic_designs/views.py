@@ -12,7 +12,7 @@ from users.models import Item, OrderItem, Order, BillingAddress, Payment
 
 import stripe
 
-stripe.api_key = settings.STRIPE_TEST_KEY
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class HomeView(ListView):
     model = Item
@@ -180,61 +180,30 @@ class PaymentView(View):
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
         token = self.request.POST.get('stripeToken')
-        amount = order.get_total() * 100, # to account for it being in pence
+        # remove decimal causing error with stripe payment 
+        amount = str(order.get_total() * 100).split('.')[0] # to account for it in pence
 
+
+        stripe.PaymentIntent.create(
+            amount=amount,
+            currency='gbp',
+        )
+
+        # TODO: Success page/error page 
+
+        return redirect("core:order-confirmation")
+
+class OrderConfirmationView(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
         try:
-            charge = stripe.Charge.create(
-                amount=amount,
-                currency="gbp",
-                source=token
-            )
-
-            # create the payment 
-            payment = Payment()
-            payment.stripe_charge_id = charge['id']
-            payment.user = self.request.user
-            payment.amount = order.get_total()
-            payment.save()
-
-            # assign the payment to the order 
-
-            order.ordered = True
-            order.payment = payment
-            order.save()
-
-            # TODO: add a order confirmation page 
-            messages.success(self.request, "Your order was successful, now sit back and relax")
-            return redirect('core:home')
-        except stripe.error.CardError as e:
-            body = e.json_body
-            error = body.get('error',{})
-            messages.warning(self.request, f"{error.get('message')}")
-            return redirect('core:home')
-        except stripe.error.RateLimitError as e:
-            # Too many requests made to the API too quickly
-            messages.warning(self.request, "Too many requests")
-            return redirect('core:home')
-        except stripe.error.InvalidRequestError as e:
-            # Invalid parameters were supplied to Stripe's API
-            messages.warning(self.request, "Invalid parameters")
-            return redirect('core:home')
-        except stripe.error.AuthenticationError as e:
-            # Authentication with Stripe's API failed
-            # (maybe you changed API keys recently)
-            messages.warning(self.request, "Not authenticated")
-            return redirect('core:home')
-        except stripe.error.APIConnectionError as e:
-            # Network communication with Stripe failed
-            messages.warning(self.request, "Unable to connect to stripe")
-            return redirect('core:home')
-        except stripe.error.StripeError as e:
-            # Display a very generic error to the user, and maybe send
-            # yourself an email
-            messages.warning(self.request, "Something went wrong, you have not been charged. Please try again")
-            return redirect('core:home')
-        except Exception as e:
-            # send email to self 
-            messages.warning(self.request, "Serious error has occured we have been notified")
-            return redirect('core:home')
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            context = {
+                'object':order
+            }
+            return render(self.request, "app/order_confirmation.html", context)
+        except ObjectDoesNotExist:
+            messages.error(self.request, "You do not have an active order")
+            return redirect("core:home")
+        return render(self.request, "app/order_confirmation.html")
 
         

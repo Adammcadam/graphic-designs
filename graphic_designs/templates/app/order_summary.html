@@ -1,71 +1,73 @@
 {% extends 'app/base.html' %}
 
 {% block body %}
-    <div class="table-responsive text-nowrap mt-5">
-        <h2>Order Summary</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Total Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order_item in object.items.all %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ order_item.item.title }}</td>
-                    <td>
-                        £{{ order_item.item.price }}
-                    </td>
-                    <td>
-                        <a href="{% url 'core:remove-single-item-from-cart' order_item.item.slug %}">
-                            <i class="fa fa-minus-square" aria-hidden="true"></i>
-                        </a> 
-                        {{ order_item.quantity }} 
-                        <a href="{% url 'core:add-to-cart' order_item.item.slug %}">
-                            <i class="fa fa-plus-square" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                    <td>
-                        {% if order_item.item.discount_price %}
-                            £{{ order_item.get_total_discount_price }}
-                            <!-- put this in a badge/tag  -->
-                            <span class="badge badge-primary">You have saved £{{ order_item.get_savings }}0 woo!</span>
-                        {% else %}
-                            £{{ order_item.get_total_price }}
-                        {% endif %}
-                        <a class="float-right text-danger" href="{% url 'core:remove-from-cart' order_item.item.slug %}">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
+    <div class="col-md-12">
+        <div class="text-nowrap mt-5 mobile-center">
+            <h2>Order Summary</h2>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td colspan="5">Your cart is empty :(</td>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order_item in object.items.all %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td><a href="{{ order_item.get_absolute_url }}">{{ order_item.item.title }}</a></td>
+                        <td>
+                            £{{ order_item.item.price }}
+                        </td>
+                        <td>
+                            <a href="{% url 'core:remove-single-item-from-cart' order_item.item.slug %}">
+                                <i class="fa fa-minus-square" aria-hidden="true"></i>
+                            </a> 
+                            {{ order_item.quantity }} 
+                            <a href="{% url 'core:add-to-cart' order_item.item.slug %}">
+                                <i class="fa fa-plus-square" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                        <td>
+                            {% if order_item.item.discount_price %}
+                                £{{ order_item.get_total_discount_price }}
+                                <!-- put this in a badge/tag  -->
+                                <span class="badge badge-primary">You have saved £{{ order_item.get_savings }}0 woo!</span>
+                            {% else %}
+                                £{{ order_item.get_total_price }}
+                            {% endif %}
+                            <a class="float-right text-danger" href="{% url 'core:remove-from-cart' order_item.item.slug %}">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">Your cart is empty :(</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <a href="{% url 'core:home' %}" class="btn btn-primary float-right mr-1">Continue Shopping</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% if object.get_total %}
+                    <tr>
+                        <td colspan="4"><strong>Order Total:</strong></td>
+                        <td colspan="1">£{{ object.get_total }}</td>
                     </tr>
                     <tr>
-                        <td colspan="5">
+                        <td colspan="5" class="mobile-right">
+                            <a href="{% url 'core:checkout' %}" class="btn btn-info float-right">Proceed to checkout</a>
                             <a href="{% url 'core:home' %}" class="btn btn-primary float-right mr-1">Continue Shopping</a>
                         </td>
                     </tr>
-                {% endfor %}
-                {% if object.get_total %}
-                <tr>
-                    <td colspan="4"><strong>Order Total:</strong></td>
-                    <td colspan="1">£{{ object.get_total }}</td>
-                </tr>
-                <tr>
-                    <td colspan="5">
-                        <a href="{% url 'core:checkout' %}" class="btn btn-info float-right">Proceed to checkout</a>
-                        <a href="{% url 'core:home' %}" class="btn btn-primary float-right mr-1">Continue Shopping</a>
-                    </td>
-                </tr>
-                {% endif %}
-            </tbody>
-        </table>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}

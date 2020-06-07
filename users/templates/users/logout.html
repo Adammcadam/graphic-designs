@@ -1,11 +1,14 @@
 {% extends 'app/base.html' %}
 
 {% block body %}
-    <div class="col-md-12 mt-5">
+    <div class="col-md-12 mt-5 mobile-center">
         <h2>You have been logged out</h2>
         <div class="border-top pt3">
             <small class="text-muted">
-                <a href="{% url 'login' %}">Log In Again</a>
+                <br>
+                <a href="{% url 'login' %}" class="btn btn-outline-info">Log In</a>
+                or go to
+                <a href="{% url 'core:home' %}"class="btn btn-outline-info">Homepage</a>
             </small>
         </div>
     </div>

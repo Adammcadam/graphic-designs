@@ -12,6 +12,13 @@
             impedit officiis facere sed blanditiis fugit odio repellat facilis ullam
             unde beatae dolor accusamus modi laborum distinctio hic. Odio, unde labore.
         </p>
+        
+        {% if item.discount_price %}
+            <p><s>Was: £{{ item.price }}</s></p>
+            <p><strong>Now: £{{ item.discount_price }}</strong></p>
+        {% else %}
+            <p>£{{ item.price }}</p>
+        {% endif %}
         <a class="btn btn-primary mb-5" href="{{ item.get_add_to_cart_url }}">Add to cart</a>
     </div>
     <div class="col-md-6 mt-5">

@@ -8,16 +8,15 @@
 <div class="col-md-8 mt-5">
     <h1>Make Payment</h1>
     
-    <form action="." method="post" id="stripe-form">
+    <form action="." method="POST" id="stripe-form">
         {% csrf_token %}
         <div class="stripe-form-row">
             <label for="card-element">
-            Credit or debit card
+                Credit or debit card
             </label>
             <div id="card-element">
             <!-- A Stripe Element will be inserted here. -->
             </div>
-
             <!-- Used to display form errors. -->
             <div id="card-errors" role="alert"></div>
         </div>
@@ -26,7 +25,7 @@
     </form>
 </div>
 <!-- TODO style this area below -->
-<div class="col-md-4">
+<div class="col-md-4 mt-5">
     <legend class="border-bottom mb-2">Order Summary</legend>
     {% for order_item in order.items.all %}
         <p>{{order_item.quantity }} x {{ order_item.item.title }}: <strong>£{{ order_item.get_final_price }}</strong></p>
