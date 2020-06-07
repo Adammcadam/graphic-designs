@@ -124,10 +124,10 @@ class BillingAddress(models.Model):
 
 class Payment(models.Model):
     stripe_charge_id = models.CharField(max_length=50)
+    # make sure payment is not deleted on user deletion 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     amount = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    order_number = models.IntegerField(default=1)
 
     def __str__(self):
         return self.user.username

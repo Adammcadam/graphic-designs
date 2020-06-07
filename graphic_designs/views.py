@@ -178,18 +178,33 @@ class PaymentView(View):
         return render(self.request, "app/payment.html", context)
 
     def post(self, *args, **kwargs):
+        # get the order 
         order = Order.objects.get(user=self.request.user, ordered=False)
+        # get the token from stripe 
         token = self.request.POST.get('stripeToken')
         # remove decimal causing error with stripe payment 
         amount = str(order.get_total() * 100).split('.')[0] # to account for it in pence
-
-
-        stripe.PaymentIntent.create(
+        # make the payment intent to stripe 
+        charge = stripe.PaymentIntent.create(
             amount=amount,
             currency='gbp',
+            source=token
         )
+        # confirm its been ordered
+        order.ordered = True 
+        # create the payment
+        payment = Payment()
+        payment.stripe_charge_id = charge['id']
+        payment.user = self.request.user
+        payment.amount = amount
+        payment.save()
+        # assign the payment
+        order.payment = payment
+        order.save()
 
-        # TODO: Success page/error page 
+
+
+        # TODO: Success page/error page. Send email confirmation etc
 
         return redirect("core:order-confirmation")
 
